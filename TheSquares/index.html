@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            div,p,h1,h3,h4,h5,h6,hgroup,a,section,article,ul,ol,li,html,button{
+                margin:0;
+                padding:0;
+            }
+            html{
+                width: 100%;
+            }
+            body{
+                width: 100%;
+                padding:0;
+                margin: 0;
+                background: #120146;
+                background: -webkit-linear-gradient(#9C8DC7,#120146);
+                background: -moz-linear-gradient(#9C8DC7,#120146);
+                background: linear-gradient(#2B1A5D,#120146);
+                background-repeat: no-repeat;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canv"></canvas>
+        <script src="javascript/Square.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            var c = document.getElementById('canv');
+            var btn = document.getElementById('btn');
+            var cd = c.getContext('2d');
+            c.width = window.innerWidth;
+            c.height = window.innerHeight;
+            //(ele,h,w,g,r,b,x,y,dx,dy,o)
+            
+            var r = [];
+            var square;
+            var amount = 200;     
+                for(i=0;i<amount;i++){
+                    var w = (Math.floor(Math.random() * (100-5+1) + 5));
+                    var dx;
+                    var dy;
+                    if(w > 60){
+                        console.log('above 60');
+                        dx =(Math.floor( Math.random() * ((3-1+1)+1)));
+                        dy = (Math.floor( Math.random() * ((3-1+1)+1)));
+                    }else if(w<60 && w > 35){
+                        console.log('above 35');
+                        dx =(Math.floor( Math.random() * ((15-10+1)+10)));
+                        dy =(Math.floor( Math.random() * ((15-10+1)+10)));
+                    }else{
+                        console.log('below 35')
+                        dx =(Math.floor( Math.random() * ((50-40+1)+40)));
+                        dy =(Math.floor( Math.random() * ((50-40+1)+40)));
+                    }
+                    r.push(new Square(cd,100,w,(Math.floor( Math.random() * 255)),
+                    (Math.floor( Math.random() * 255)),(Math.floor( Math.random() * 255)),(Math.floor(Math.random() * window.innerWidth)),
+                    (Math.floor(Math.random()*window.innerHeight)),dx,dy,0.6)
+                    );
+                }
+                for(i=0;i<r.length;i++){
+                     square = r[i];
+                     square.createSquare();
+                }
+                //console.log(r);
+                
+                if(r.length > 400){
+                    r = square.removeSquare(r,r.length);
+                }
+                r = square.animateSquare(r);
+        </script>
+    </body>
+</html>
