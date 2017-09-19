@@ -12,7 +12,6 @@ var Square = function(ele,h,w,g,r,b,x,y,dx,dy,o){
     var element = ele;
     
     this.createSquare = function (){
-        //console.log("Hello Wolrd!");
         
         element.fillStyle = "rgba("+this.r+","+this.g+","+this.b+","+this.o+")";
         element.fillRect(this.x,this.y,this.w,this.w);
