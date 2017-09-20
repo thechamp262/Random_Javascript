@@ -1,30 +1,96 @@
-var Square = function(ele,h,w,g,r,b,x,y,dx,dy,o){
-    this.x = x;
-    this.y = y;
-    this.dx = dx;
-    this.dy =dy;
-    this.h = h;
-    this.w = w;
-    this.r = r;
-    this.g = g;
-    this.b = b;
-    this.o = o;
-    var element = ele;
-    
-    this.createSquare = function (){
-        
-        element.fillStyle = "rgba("+this.r+","+this.g+","+this.b+","+this.o+")";
-        element.fillRect(this.x,this.y,this.w,this.w);
-        //console.log(this.x, this.y,this.dx,this.dy,this.h,this.w,this.o,this.r,this.g,this.b,ele);
+var Square = function(){
+    var element;
+    var m = {
+        x: undefined,
+        y: undefined
     };
-    this.editSquare = function (a){
+    window.addEventListener('mousemove', 
+            function(event){
+            //(ele,h,w,x,y,dx,dy,color)
+            m.x = event.x;
+            m.y = event.y;
+        });
+    this.squareArrayBuild = function (amount,cd){
+        element = cd;
+        var a = amount;
+        var color = [
+            '#024959',
+            '#037E8C',
+            '#FFFFFA',
+            '#F24C27',
+            '#40858A',
+            '#D8C00F'
+        ];
+        //(h,w,x,y,dx,dy,color)
+        var r = [];
+        for(i=0;i<a;i++){
+            var w = (Math.floor( Math.random() * ((100-1+1)+1)));
+            var dx;
+            var dy;
+            
+            if(w > 60){
+               // console.log('above 60');
+                dx =(Math.floor( Math.random() * ((3-1+1)+1)));
+                dy = (Math.floor( Math.random() * ((3-1+1)+1)));
+            }else if(w<60 && w > 35){
+                //console.log('above 35');
+                dx =(Math.floor( Math.random() * ((15-10+1)+10)));
+                dy =(Math.floor( Math.random() * ((15-10+1)+10)));
+            }else{
+                //console.log('below 35');
+                dx =(Math.floor( Math.random() * ((3-1+1)+1)));
+                dy = (Math.floor( Math.random() * ((3-1+1)+1)));
+            }
+             //square = r[i];
+             console.log(a);
+            var y = (Math.floor(Math.random()*window.innerHeight));
+            var x = (Math.floor(Math.random() * window.innerWidth));
+            var c = color[Math.floor(Math.random()*(6-0)+0)];
+            
+             r.push({
+                 h : w,
+                 w : w,
+                 x: x,
+                 y: y,
+                 dx: dx,
+                 dy: dy,
+                 c: c
+             });
+             createSquare(100,w,x,y,dx,dy,c);
+        }        
+        this.animateSquare(r);
+    };
+    var createSquare = function (h,w,x,y,dx,dy,c){
+        
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy =dy;
+        this.h = h;
+        this.w = w;
+        this.c = c;
+       
+//        if(m.y - this.y < 10 && m.y - this.y > -10){
+//             this.y = -this.y; 
+//             //this.w++;
+//        }
+        element.fillStyle = this.c;
+        element.fillRect(this.x,this.y,this.w,this.w);
+    }; //(h,w,x,y,dx,dy,color)
+    var editSquare = function (a){
         element.clearRect(0,0,innerWidth,innerHeight);
         var arr = a;
         for(i=0;i<arr.length;i++){
-            element.fillStyle = "rgba("+arr[i]['r']+","+arr[i]['g']+","+arr[i]['b']+","+arr[i]['o']+")";
-            element.fillRect(arr[i]['x'],arr[i]['y'],arr[i]['w'],arr[i]['w']);
-        }
-        return arr;
+            if(arr[i]['x'] > innerWidth || arr[i]['x'] < 0){
+                arr[i]['dx'] = -arr[i]['dx']; 
+            }
+             if(arr[i]['y'] > innerHeight || arr[i]['y'] < 0){
+                arr[i]['dy'] = -arr[i]['dy']; 
+            }
+            arr[i]['x'] += arr[i]['dx'];
+            arr[i]["y"] += arr[i]['dy']; 
+            createSquare(arr[i]['h'],arr[i]['w'],arr[i]['x'],arr[i]['y'],arr[i]['dx'],arr[i]['dy'],arr[i]['c']);
+            }
     };
     this.removeSquare = function (a,amount){
         
@@ -38,24 +104,12 @@ var Square = function(ele,h,w,g,r,b,x,y,dx,dy,o){
         return arr;
     };
     this.animateSquare = function(a){
-        var arr = a,
-        ani = function(){
-            element.clearRect(0,0,innerWidth,innerHeight);
+        var  arr = a;
+        var ani = function(){
             requestAnimationFrame(ani);
             for(i=0;i<arr.length;i++){
-                if(arr[i]['x'] > innerWidth || arr[i]['x'] < 0){
-                    arr[i]['dx'] = -arr[i]['dx']; 
-                }
-                 if(arr[i]['y'] > innerHeight || arr[i]['y'] < 0){
-                    arr[i]['dy'] = -arr[i]['dy']; 
-                }
-                arr[i]['x'] += arr[i]['dx'];
-                arr[i]["y"] += arr[i]['dy'];
-            }
-            for(i=0;i<arr.length;i++){
-                element.fillStyle = "rgba("+arr[i]['r']+","+arr[i]['g']+","+arr[i]['b']+","+arr[i]['o']+")";
-                element.fillRect(arr[i]['x'],arr[i]['y'],arr[i]['w'],arr[i]['w']);
-            }
+               editSquare(arr);
+            } 
             return arr;
         };
          return ani();
